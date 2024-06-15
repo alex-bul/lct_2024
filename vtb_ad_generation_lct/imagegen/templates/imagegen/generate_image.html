@@ -1,0 +1,332 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> ГазпромБанк Marketing Generation</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        .page_title {
+            color: #0f1e7d;
+        }
+        .sidebar {
+            width: 25%;
+            padding: 20px;
+            background-color: #f8f9fa;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+            transition: transform 0.3s ease;
+        }
+        .sidebar-hidden {
+            transform: translateX(-100%);
+        }
+        .main-content {
+            width: 75%;
+            margin-left: 25%;
+            padding: 20px;
+            overflow: auto;
+            transition: margin-left 0.3s ease;
+        }
+        .main-content-full {
+            margin-left: 0;
+            width: 100%;
+        }
+        .image-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+            flex-direction: column;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        img {
+            width: 400px;
+            height: 400px;
+            object-fit: cover; /* Ensure the image covers the container */
+        }
+        .tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .tag {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            padding: 5px 10px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .download-btn {
+<!--            position: absolute;-->
+            right: 10px;
+            top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+<!--        @media (max-width: 768px) {-->
+<!--            .sidebar {-->
+<!--                transform: translateX(-100%);-->
+<!--            }-->
+<!--            .main-content {-->
+<!--                width: 100%;-->
+<!--                margin-left: 0;-->
+<!--            }-->
+<!--            .sidebar-visible .sidebar {-->
+<!--                transform: translateX(0);-->
+<!--            }-->
+<!--            .sidebar-visible .main-content {-->
+<!--                margin-left: 25%;-->
+<!--                width: 75%;-->
+<!--            }-->
+<!--        }-->
+        .toggle-btn {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .toggle-btn:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%; /* На мобильных устройствах сайдбар занимает всю ширину */
+                float: none; /* Отменяем float */
+                position: relative;
+            }
+            .main-content {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+
+
+        .logout-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+    }
+
+
+
+    </style>
+</head>
+<body>
+<!--<div class="toggle-btn">-->
+<!--    <button class="btn btn-primary" id="toggleSidebar">Toggle Sidebar</button>-->
+<!--</div>-->
+
+<div class="sidebar" id="sidebar">
+    <h2>ГазпромБанк Marketing Generation</h2>
+    <form id="generateForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="channel">Канал</label>
+            <select class="form-control" id="channel" name="channel">
+                <option value="MOB_BANNER" selected>MOB_BANNER</option>
+                <option value="TMO">TMO</option>
+                <option value="SMS">SMS</option>
+                <option value="PUSH">PUSH</option>
+                <option value="EMAIL">EMAIL</option>
+                <option value="OFFICE_BANNER">OFFICE_BANNER</option>
+                <option value="MOBILE_CHAT">MOBILE_CHAT</option>
+                <option value="KND">KND</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="category">Категория</label>
+            <select class="form-control" id="category" name="category">
+                <option value="Карты">Карты</option>
+                <option value="Премиум">Премиум</option>
+                <option value="Инвестиции">Инвестиции</option>
+                <option value="Вклады и счета">Вклады и счета</option>
+                <option value="Ипотека" selected>Ипотека</option>
+                <option value="Кредиты">Кредиты</option>
+                <option value="Автокредитование">Автокредитование</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="product">Продукт</label>
+            <select class="form-control" id="product" name="product">
+                <option value="Ипотека на строительство дома">Ипотека на строительство дома</option>
+                <option value="Семейная ипотека">Семейная ипотека</option>
+                <option value="Льготная ипотека на новостройку">Льготная ипотека на новостройку</option>
+                <option value="Вторичное жилье">Вторичное жилье</option>
+                <option value="Ипотека для IT специалистов" selected>Ипотека для IT специалистов</option>
+                <option value="Дальневосточная ипотека">Дальневосточная ипотека</option>
+                <option value="Ипотека на дом">Ипотека на дом</option>
+                <option value="Льготная ипотека">Льготная ипотека</option>
+            </select>
+        </div>
+        <!--        <div class="form-group">-->
+        <!--            <label for="session_id">Сеанс</label>-->
+        <!--            <select class="form-control" id="session_id" name="session_id">-->
+        <!--                {% for session in sessions %}-->
+        <!--                    <option value="{{ session.id }}">{{ session.created_at }}</option>-->
+        <!--                {% endfor %}-->
+        <!--            </select>-->
+        <!--        </div>-->
+        <button type="submit" class="btn btn-primary">Генерировать</button>
+    </form>
+
+    <div>
+        <h2>Сеансы:</h2>
+        <div class=" d-flex flex-column" style="gap: 10px;" role="group" aria-label="Сессии">
+            {% for session in sessions %}
+            <a href="?session_id={{ session.id }}" class="btn btn-info">
+                {{ session.created_at|date:'d.m.Y H:i' }}
+            </a>
+            {% endfor %}
+        </div>
+
+        <button class="btn btn-success mt-3" onclick="window.location.href='{% url 'create_session' %}'">Создать новый
+            сеанс
+        </button>
+    </div>
+
+    <button class="btn btn-danger mt-5 logout-btn" onclick="window.location.href='{% url 'logout' %}'">Выйти из
+        аккаунта
+    </button>
+</div>
+<!--<div class="main-content">-->
+<!--    <div id="result">-->
+<!--        &lt;!&ndash; Resulting images will be displayed here &ndash;&gt;-->
+<!--    </div>-->
+<!--</div>-->
+
+<div class="main-content">
+    <div id="result">
+        {% for image in images %}
+        <div class="image-container">
+            <img src="data:image/jpeg;base64,{{ image.image }}" alt="Изображение" class="img-fluid">
+            <div class="tags">
+                <div class="tag">{{ image.channel }}</div>
+                <div class="tag">{{ image.category }}</div>
+                <div class="tag">{{ image.product }}</div>
+                <button class="download-btn">⇩</button>
+            </div>
+        </div>
+        {% endfor %}
+        <!-- Resulting images will be displayed here -->
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    document.getElementById('generateForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        formData.append('session_id', sessionId);
+
+        // Create a loader element
+        const loader = document.createElement('div');
+        loader.classList.add('loader');
+        const container = document.createElement('div');
+        container.classList.add('image-container');
+        container.appendChild(loader);
+        document.getElementById('result').prepend(container);
+
+        const response = await fetch('', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        console.log(result)
+
+        // Remove the loader
+        container.removeChild(loader);
+
+        const img = document.createElement('img');
+        img.src = 'data:image/png;base64,' + result.image;
+        img.classList.add('img-fluid');
+        container.appendChild(img);
+
+        // Create tags
+        const tags = document.createElement('div');
+        tags.classList.add('tags');
+        const channelTag = document.createElement('div');
+        channelTag.classList.add('tag');
+        channelTag.textContent = formData.get('channel');
+        tags.appendChild(channelTag);
+        const categoryTag = document.createElement('div');
+        categoryTag.classList.add('tag');
+        categoryTag.textContent = formData.get('category');
+        tags.appendChild(categoryTag);
+        const productTag = document.createElement('div');
+        productTag.classList.add('tag');
+        productTag.textContent = formData.get('product');
+        tags.appendChild(productTag);
+
+        // Create download button
+        const downloadBtn = document.createElement('button');
+        downloadBtn.classList.add('download-btn');
+        downloadBtn.innerHTML = '&#8681;';
+        downloadBtn.onclick = function() {
+            const link = document.createElement('a');
+            link.href = img.src;
+            link.download = 'generated_image.png';
+            link.click();
+        };
+        tags.appendChild(downloadBtn);
+        container.appendChild(tags);
+
+    });
+
+    // Toggle sidebar visibility on mobile
+    document.getElementById('toggleSidebar').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('d-none');
+    });
+
+
+
+
+
+
+</script>
+</body>
+</html>
