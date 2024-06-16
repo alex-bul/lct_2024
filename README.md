@@ -17,7 +17,7 @@ docker compose up --build
 ```commandline
 pip install -r requirements.txt
 cd vtb_ad_generation_lct
-python manage runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8000
 ```
 
 Веб-сервис будет доступен на localhost:8000
