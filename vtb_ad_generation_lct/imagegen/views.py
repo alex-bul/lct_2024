@@ -58,20 +58,31 @@ def generate_image(request):
             session_id = sessions[0].id
         session = Session.objects.get(id=session_id)
 
+        def get_float_or_none(data, key):
+            value = data.get(key)
+            value = value.replace(',', '.')
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                return None
+
+        image_source = request.POST.get('image_source')
+
         channel = request.POST.get('channel')
         product = request.POST.get('product')
-        gender = request.POST.get('gender')
-        age = request.POST.get('age')
-        cnt_tr_all_3m = request.POST.get('cnt_tr_all_3m')
-        cnt_tr_top_up_3m = request.POST.get('cnt_tr_top_up_3m')
-        cnt_tr_cash_3m = request.POST.get('cnt_tr_cash_3m')
-        cnt_tr_buy_3m = request.POST.get('cnt_tr_buy_3m')
-        cnt_tr_mobile_3m = request.POST.get('cnt_tr_mobile_3m')
-        cnt_tr_oil_3m = request.POST.get('cnt_tr_oil_3m')
-        cnt_tr_on_card_3m = request.POST.get('cnt_tr_on_card_3m')
-        cnt_tr_service_3m = request.POST.get('cnt_tr_service_3m')
-        sum_zp_12m = request.POST.get('sum_zp_12m')
-        app_vehicle_ind = request.POST.get('app_vehicle_ind')
+
+        gender = get_float_or_none(request.POST, 'gender')
+        age = get_float_or_none(request.POST, 'age')
+        cnt_tr_all_3m = get_float_or_none(request.POST, 'cnt_tr_all_3m')
+        cnt_tr_top_up_3m = get_float_or_none(request.POST, 'cnt_tr_top_up_3m')
+        cnt_tr_cash_3m = get_float_or_none(request.POST, 'cnt_tr_cash_3m')
+        cnt_tr_buy_3m = get_float_or_none(request.POST, 'cnt_tr_buy_3m')
+        cnt_tr_mobile_3m = get_float_or_none(request.POST, 'cnt_tr_mobile_3m')
+        cnt_tr_oil_3m = get_float_or_none(request.POST, 'cnt_tr_oil_3m')
+        cnt_tr_on_card_3m = get_float_or_none(request.POST, 'cnt_tr_on_card_3m')
+        cnt_tr_service_3m = get_float_or_none(request.POST, 'cnt_tr_service_3m')
+        sum_zp_12m = get_float_or_none(request.POST, 'sum_zp_12m')
+        app_vehicle_ind = get_float_or_none(request.POST, 'app_vehicle_ind')
 
         with open(os.path.join('static/', random.choice(os.listdir('./static'))), 'rb') as image_file:
             encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
