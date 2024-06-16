@@ -49,6 +49,8 @@ def user_logout(request):
 @login_required
 def generate_image(request):
     sessions = Session.objects.filter(user=request.user).order_by('-created_at')[:5]
+    if len(sessions) == 0:
+        return redirect('create_session')
 
     if request.method == 'POST':
         session_id = request.POST.get('session_id')
@@ -71,8 +73,6 @@ def generate_image(request):
             status=200)
 
     selected_session_id = request.GET.get('session_id')
-    if len(sessions) == 0:
-        redirect('create_session')
 
     if not selected_session_id or not selected_session_id.isdigit():
         selected_session_id = sessions[0].id
