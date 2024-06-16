@@ -59,17 +59,39 @@ def generate_image(request):
         session = Session.objects.get(id=session_id)
 
         channel = request.POST.get('channel')
-        category = request.POST.get('category')
         product = request.POST.get('product')
+        gender = request.POST.get('gender')
+        age = request.POST.get('age')
+        cnt_tr_all_3m = request.POST.get('cnt_tr_all_3m')
+        cnt_tr_top_up_3m = request.POST.get('cnt_tr_top_up_3m')
+        cnt_tr_cash_3m = request.POST.get('cnt_tr_cash_3m')
+        cnt_tr_buy_3m = request.POST.get('cnt_tr_buy_3m')
+        cnt_tr_mobile_3m = request.POST.get('cnt_tr_mobile_3m')
+        cnt_tr_oil_3m = request.POST.get('cnt_tr_oil_3m')
+        cnt_tr_on_card_3m = request.POST.get('cnt_tr_on_card_3m')
+        cnt_tr_service_3m = request.POST.get('cnt_tr_service_3m')
+        sum_zp_12m = request.POST.get('sum_zp_12m')
+        app_vehicle_ind = request.POST.get('app_vehicle_ind')
 
         with open(os.path.join('static/', random.choice(os.listdir('./static'))), 'rb') as image_file:
             encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
 
-        image = Image.objects.create(session=session, channel=channel, category=category, product=product,
+        image = Image.objects.create(session=session, channel=channel, product=product, gender=gender,
+                                     age=age, cnt_tr_all_3m=cnt_tr_all_3m, cnt_tr_top_up_3m=cnt_tr_top_up_3m,
+                                     cnt_tr_cash_3m=cnt_tr_cash_3m, cnt_tr_buy_3m=cnt_tr_buy_3m,
+                                     cnt_tr_mobile_3m=cnt_tr_mobile_3m, cnt_tr_oil_3m=cnt_tr_oil_3m,
+                                     cnt_tr_on_card_3m=cnt_tr_on_card_3m, cnt_tr_service_3m=cnt_tr_service_3m,
+                                     sum_zp_12m=sum_zp_12m, app_vehicle_ind=app_vehicle_ind,
                                      image=encoded_image)
 
         return JsonResponse(
-            {"image": image.image, "channel": image.channel, "category": image.category, "product": image.product},
+            {"image": image.image, "channel": image.channel, "product": image.product,
+             "gender": image.gender, "age": image.age, "cnt_tr_all_3m": image.cnt_tr_all_3m,
+             "cnt_tr_top_up_3m": image.cnt_tr_top_up_3m, "cnt_tr_cash_3m": image.cnt_tr_cash_3m,
+             "cnt_tr_buy_3m": image.cnt_tr_buy_3m, "cnt_tr_mobile_3m": image.cnt_tr_mobile_3m,
+             "cnt_tr_oil_3m": image.cnt_tr_oil_3m, "cnt_tr_on_card_3m": image.cnt_tr_on_card_3m,
+             "cnt_tr_service_3m": image.cnt_tr_service_3m, "sum_zp_12m": image.sum_zp_12m,
+             "app_vehicle_ind": image.app_vehicle_ind},
             status=200)
 
     selected_session_id = request.GET.get('session_id')
